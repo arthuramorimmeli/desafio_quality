@@ -30,12 +30,12 @@ public class Room {
     private String name;
 
     @NotNull(message = "A largura do comodo não pode estar vazio")
-    //@Max(value = 25, message = "A largura maxima permitida do comodo é de 25m")
+    @DecimalMax(value = "25.0", message = "A largura maxima permitida do comodo é de 25m")
     @Column
     private BigDecimal width;
 
     @NotNull(message = "O comprimento do comodo não pode estar vazio")
-    //@Max(value =33, message = "O comprimento maximo permitido do comodo é de 33m")
+    @DecimalMax(value = "33.0", message = "O comprimento maximo permitido do comodo é de 33m")
     @Column
     private BigDecimal length;
 

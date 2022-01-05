@@ -9,7 +9,6 @@ import org.hibernate.validator.constraints.Range;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
-import java.util.List;
 
 @Entity
 @Getter
@@ -28,7 +27,7 @@ public class District {
     private String name;
 
     @NotNull(message = "O valor do metro quadrado no bairro não pode estar vazio")
-    @Range(min=0, max = 13, message = "Valor maximo é 13")
+    @DecimalMax(value = "13.0", message = "Valor maximo é 13")
     @Column
-    private BigDecimal footageValue;
+    private Double footageValue;
 }
