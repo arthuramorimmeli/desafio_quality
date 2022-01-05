@@ -8,6 +8,10 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.transaction.Transactional;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,6 +27,10 @@ public class Property {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotNull(message = "O nome da propriedade não pode estar vazio")
+    @NotEmpty(message = "O nome da propriedade não pode estar vazio.")
+    @Size(max = 30, message = "O comprimento do nome não pode exceder 30 caracteres.")
+    @Pattern(regexp = "^[A-Z].*$", message = "O nome da propriedade deve começar com letra maiuscula")
     @Column
     private String name;
 
