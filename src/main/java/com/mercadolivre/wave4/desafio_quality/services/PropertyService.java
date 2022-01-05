@@ -15,14 +15,17 @@ import java.util.List;
 @Service
 public class PropertyService {
 
-    @Autowired
     private PropertyRepository propertyRepository;
 
-    @Autowired
     private DistrictRepository districtRepository;
 
-    @Autowired
     private RoomRepository roomRepository;
+
+    public PropertyService(PropertyRepository propertyRepository, DistrictRepository districtRepository, RoomRepository roomRepository) {
+        this.propertyRepository = propertyRepository;
+        this.districtRepository = districtRepository;
+        this.roomRepository = roomRepository;
+    }
 
     public Property create(Property property) {
         property.setDistrict(districtRepository.saveAndFlush(property.getDistrict()));
@@ -36,6 +39,10 @@ public class PropertyService {
 
     public Property findById(Long id) {
         return propertyRepository.getById(id);
+    }
+
+    public Double calculateMetersOfProperty(Property property) {
+        return property.getRooms().stream().mapToDouble(room -> room.getLength().doubleValue() * room.getWidth().doubleValue()).sum();
     }
 
 //    public CustomerDTO customerToDTO(Customer customer) {

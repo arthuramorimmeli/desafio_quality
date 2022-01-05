@@ -1,9 +1,6 @@
 package com.mercadolivre.wave4.desafio_quality.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -21,6 +18,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Property {
 
     @Id
@@ -39,10 +37,6 @@ public class Property {
 
     @OneToMany
     private List<Room> rooms = new ArrayList<>();
-
-    @Column(nullable = false, updatable = false)
-    @CreationTimestamp
-    private Date createdAt;
 
     public District getDistrict() {
         return district;

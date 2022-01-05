@@ -1,20 +1,16 @@
 package com.mercadolivre.wave4.desafio_quality.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.validator.constraints.Range;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
-import java.math.BigDecimal;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class District {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
