@@ -22,6 +22,8 @@ public class District {
     private String name;
     @Column(nullable = false)
     private Double footageValue;
+
+
     @OneToMany(mappedBy = "district")
-    private List<Room> rooms;
+    private List<Property> properties;
 }

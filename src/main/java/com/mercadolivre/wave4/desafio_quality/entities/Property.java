@@ -21,10 +21,11 @@ public class Property {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    @Transient
-    @ManyToOne
+
+    @ManyToOne(targetEntity = District.class)
     @JoinColumn(name = "district_id")
     private District district;
+
     @OneToMany
     private List<Room> rooms = new ArrayList<>();
 }
