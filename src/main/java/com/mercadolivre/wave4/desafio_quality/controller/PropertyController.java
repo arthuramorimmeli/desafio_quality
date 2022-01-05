@@ -5,13 +5,12 @@ import com.mercadolivre.wave4.desafio_quality.entities.Property;
 import com.mercadolivre.wave4.desafio_quality.services.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping(name = "/property")
+@RequestMapping("/property")
 public class PropertyController {
 
     @Autowired
@@ -20,6 +19,16 @@ public class PropertyController {
     @PostMapping
     public ResponseEntity<?> createProperty(@RequestBody Property property) {
         return ResponseEntity.ok(propertyService.create(property));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<?>> getAll() {
+        return ResponseEntity.ok(propertyService.getAll());
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<?> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(propertyService.findById(id));
     }
 
 }

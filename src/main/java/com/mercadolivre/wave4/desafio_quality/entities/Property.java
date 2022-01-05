@@ -22,10 +22,12 @@ public class Property {
     private Long id;
     private String name;
 
-    @ManyToOne(targetEntity = District.class)
+    @Transient
+    @ManyToOne
     @JoinColumn(name = "district_id")
     private District district;
 
+    @Transient
     @OneToMany
     private List<Room> rooms = new ArrayList<>();
 }
