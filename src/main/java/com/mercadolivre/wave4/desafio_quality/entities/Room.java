@@ -22,4 +22,8 @@ public class Room {
     private Double width;
     private Double length;
 
+    @ManyToOne
+    @JoinColumn(name = "property_id")
+    private Property property;
+
 }
