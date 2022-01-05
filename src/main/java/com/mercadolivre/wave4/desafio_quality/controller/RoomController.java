@@ -1,4 +1,4 @@
-package com.mercadolivre.wave4.gerardiploma.controller;
+package com.mercadolivre.wave4.desafio_quality.controller;
 
 
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,4 +1,4 @@
-package com.mercadolivre.wave4.gerardiploma.entities;
+package com.mercadolivre.wave4.desafio_quality.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,7 +20,8 @@ public class Property {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    private String address;
+    @ManyToOne
+    private District district;
     @OneToMany
     private List<Room> rooms = new ArrayList<>();
 }
