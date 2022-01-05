@@ -1,8 +1,8 @@
 package com.mercadolivre.wave4.desafio_quality.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
@@ -21,8 +21,9 @@ public class Room {
     private Double width;
     private Double length;
 
+    @JsonIgnore
     @Transient
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "property_id")
     private Property property;
 
