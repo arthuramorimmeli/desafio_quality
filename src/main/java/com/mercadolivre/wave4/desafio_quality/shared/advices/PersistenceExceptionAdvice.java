@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
+import javax.validation.ConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,6 +36,15 @@ public class PersistenceExceptionAdvice {
         return errors;
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value= ConstraintViolationException.class)
+    public Map<String, String> handleValidationExceptions(ConstraintViolationException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getConstraintViolations().forEach(constraintViolation -> {
+            errors.put(constraintViolation.getPropertyPath().toString(), constraintViolation.getMessage());
+        });
+        return errors;
+    }
 
     @ExceptionHandler(value = RepositoryException.class)
     protected ResponseEntity<Object> handlePersistencia(RepositoryException ex, WebRequest request) {
