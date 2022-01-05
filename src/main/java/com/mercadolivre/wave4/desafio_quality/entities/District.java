@@ -1,13 +1,18 @@
 package com.mercadolivre.wave4.desafio_quality.entities;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class District {
 
     @Id
@@ -17,4 +22,6 @@ public class District {
     private String name;
     @Column(nullable = false)
     private Double footageValue;
+    @OneToMany(mappedBy = "district")
+    private List<Room> rooms;
 }

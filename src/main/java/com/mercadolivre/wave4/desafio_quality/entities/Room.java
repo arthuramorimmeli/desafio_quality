@@ -22,6 +22,7 @@ public class Room {
     private Double width;
     private Double length;
 
+    @Transient
     @ManyToOne
     @JoinColumn(name = "property_id")
     private Property property;
