@@ -1,13 +1,13 @@
-package com.mercadolivre.wave4.gerardiploma;
+package com.mercadolivre.wave4.desafio_quality;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class GerardiplomaApplication {
+public class DesafioQualityApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(GerardiplomaApplication.class, args);
+        SpringApplication.run(DesafioQualityApplication.class, args);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.mercadolivre.wave4.gerardiploma.entities;
+package com.mercadolivre.wave4.desafio_quality.entities;
 
 
 import lombok.AllArgsConstructor;
