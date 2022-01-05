@@ -21,10 +21,13 @@ public class Property {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
+
     @Transient
     @ManyToOne
     @JoinColumn(name = "district_id")
     private District district;
+
+    @Transient
     @OneToMany
     private List<Room> rooms = new ArrayList<>();
 }

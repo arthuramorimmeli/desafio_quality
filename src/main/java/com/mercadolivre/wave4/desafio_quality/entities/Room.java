@@ -10,7 +10,6 @@ import javax.persistence.*;
 
 @Entity
 @Setter
-@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Room {
@@ -27,4 +26,43 @@ public class Room {
     @JoinColumn(name = "property_id")
     private Property property;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Double getWidth() {
+        return width;
+    }
+
+    public void setWidth(Double width) {
+        this.width = width;
+    }
+
+    public Double getLength() {
+        return length;
+    }
+
+    public void setLength(Double length) {
+        this.length = length;
+    }
+
+    public Long getProperty() {
+        return property.getId();
+    }
+
+    public void setProperty(Property property) {
+        this.property = property;
+    }
 }
