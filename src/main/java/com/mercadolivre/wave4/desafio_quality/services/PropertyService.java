@@ -38,4 +38,11 @@ public class PropertyService {
         return propertyRepository.getById(id);
     }
 
+//    public CustomerDTO customerToDTO(Customer customer) {
+//        return modelMapper.map(customer, CustomerDTO.class);
+//    }
+
+//    public Customer customerToDTO(CustomerDTO customer) {
+//        return modelMapper.map(customer, Customer.class);
+//    }
 }
