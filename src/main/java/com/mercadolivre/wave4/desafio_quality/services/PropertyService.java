@@ -25,15 +25,9 @@ public class PropertyService {
     private RoomRepository roomRepository;
 
     public Property create(Property property) {
-        if (property.getDistrict().getId() == null) {
-            districtRepository.saveAndFlush(property.getDistrict());
-        }
-        List<Room> rooms = property.getRooms();
-        Property save = propertyRepository.save(new Property(property.getId(), property.getName(), property.getDistrict(), new ArrayList<>()));
-        rooms.forEach(room -> room.setProperty(save));
-        List<Room> rooms1 = roomRepository.saveAll(rooms);
-        save.setRooms(rooms1);
-        return save;
+        property.setDistrict(districtRepository.saveAndFlush(property.getDistrict()));
+        property.setRooms(roomRepository.saveAll(property.getRooms()));
+        return propertyRepository.save(property);
     }
 
     public List<Property> getAll() {

@@ -14,12 +14,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class District {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(unique = true, nullable = false)
+    @Column
     private String name;
-    @Column(nullable = false)
+    @Column
     private Double footageValue;
 }
