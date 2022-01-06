@@ -113,6 +113,30 @@ public class PropertyServiceTest {
         assertEquals(valueExpected,propertyService.getValueOfProperty(house));
     }
 
+@Test
+    public void DeterminateAreaOfEachRoom(){
+    Room bathroom = Room.builder()
+            .name("Bathroom")
+            .length(new BigDecimal(5.0))
+            .width(new BigDecimal(5.0))
+            .build();
+
+    Room kit = Room.builder()
+            .name("kit")
+            .length(new BigDecimal(10.0))
+            .width(new BigDecimal(15.0))
+            .build();
+
+    Double areaBathroom = bathroom.getLength().doubleValue() * bathroom.getWidth().doubleValue();
+    Double areaKitchen = kit.getLength().doubleValue() * kit.getWidth().doubleValue();
+    PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictRepository, mockRoomRepository);
+
+    assertEquals(areaBathroom, propertyService.getValueAreaRoom(bathroom));
+    assertEquals(areaKitchen, propertyService.getValueAreaRoom(kit));
+
+}
+
+
     //        RoomRepository mockRoomRepository = Mockito.mock(RoomRepository.class);
     //        PropertyRepository mockPropertyRepository = Mockito.mock(PropertyRepository.class);
     //        DistrictRepository mockDistrictRepository = Mockito.mock(DistrictRepository.class);

@@ -8,6 +8,8 @@ import com.mercadolivre.wave4.desafio_quality.repositories.RoomRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
 
 @Service
 public class PropertyService {
@@ -45,6 +47,10 @@ public class PropertyService {
 
     public Double getValueOfProperty(Property property){
         return getMetersOfProperty(property) * property.getDistrict().getFootageValue();
+    }
+
+    public Double getValueAreaRoom(Room room){
+        return room.getLength().doubleValue() * room.getWidth().doubleValue();
     }
 
 //    public CustomerDTO customerToDTO(Customer customer) {
