@@ -1,7 +1,10 @@
-package com.mercadolivre.wave4.desafio_quality.shared.advices;
+package com.mercadolivre.wave4.desafio_quality.shared.handlers;
 
+import com.mercadolivre.wave4.desafio_quality.dtos.ErrorMessageDTO;
+import com.mercadolivre.wave4.desafio_quality.dtos.InvalidParamsDTO;
+import com.mercadolivre.wave4.desafio_quality.shared.exceptions.CreatePropertyException;
+import com.mercadolivre.wave4.desafio_quality.shared.exceptions.PropertyNotFoundException;
 import com.mercadolivre.wave4.desafio_quality.shared.exceptions.RepositoryException;
-import org.hibernate.validator.internal.engine.ConstraintViolationImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -19,21 +22,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
-public class PersistenceExceptionAdvice {
+public class AppExceptionHandler {
 
     @Autowired
     MessageSource messageSource;
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value= MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public InvalidParamsDTO handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = messageSource.getMessage(error, LocaleContextHolder.getLocale());
             errors.put(fieldName, errorMessage);
         });
-        return errors;
+        return InvalidParamsDTO.builder()
+                .message("Invalid params")
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .arguments(errors)
+                .build();
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -46,9 +53,14 @@ public class PersistenceExceptionAdvice {
         return errors;
     }
 
-    @ExceptionHandler(value = RepositoryException.class)
-    protected ResponseEntity<Object> handlePersistencia(RepositoryException ex, WebRequest request) {
-        String bodyOfResponse = ex.getMessage();
-        return ResponseEntity.badRequest().body(bodyOfResponse);
+    @ExceptionHandler(value = CreatePropertyException.class)
+    protected ResponseEntity<Object> handlePersistencia(CreatePropertyException ex, WebRequest request) {
+        return ResponseEntity.badRequest().body(new ErrorMessageDTO(HttpStatus.BAD_REQUEST.value(), ex.getMessage()));
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(value = PropertyNotFoundException.class)
+    protected ResponseEntity<Object> handlePersistencia(PropertyNotFoundException ex, WebRequest request) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessageDTO(HttpStatus.NOT_FOUND.value(), ex.getMessage()));
     }
 }
