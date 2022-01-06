@@ -23,10 +23,6 @@ public class Property {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull(message = "O nome da propriedade não pode estar vazio")
-    @NotEmpty(message = "O nome da propriedade não pode estar vazio.")
-    @Size(max = 30, message = "O comprimento do nome não pode exceder 30 caracteres.")
-    @Pattern(regexp = "^[A-Z].*$", message = "O nome da propriedade deve começar com letra maiuscula")
     @Column
     private String name;
 
@@ -36,22 +32,6 @@ public class Property {
 
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
     private List<Room> rooms = new ArrayList<>();
-
-    public District getDistrict() {
-        return district;
-    }
-
-    public void setDistrict(District district) {
-        this.district = district;
-    }
-
-    public List<Room> getRooms() {
-        return rooms;
-    }
-
-    public void setRooms(List<Room> rooms) {
-        this.rooms = rooms;
-    }
 
     public void addRoom() {
         this.rooms.forEach(room -> {

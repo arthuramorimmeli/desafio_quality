@@ -11,7 +11,6 @@ import com.mercadolivre.wave4.desafio_quality.entities.Property;
 import com.mercadolivre.wave4.desafio_quality.entities.Room;
 import com.mercadolivre.wave4.desafio_quality.repositories.DistrictRepository;
 import com.mercadolivre.wave4.desafio_quality.repositories.PropertyRepository;
-import com.mercadolivre.wave4.desafio_quality.repositories.RoomRepository;
 import com.mercadolivre.wave4.desafio_quality.services.PropertyService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -22,9 +21,11 @@ import java.util.Arrays;
 import java.util.List;
 
 public class PropertyServiceTest {
-    RoomRepository mockRoomRepository = Mockito.mock(RoomRepository.class);
     PropertyRepository mockPropertyRepository = Mockito.mock(PropertyRepository.class);
     DistrictRepository mockDistrictRepository = Mockito.mock(DistrictRepository.class);
+
+    PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictRepository);
+
 
     @Test
     public void shouldCheckTotalNumberOfPropertyMeters() {
@@ -47,8 +48,6 @@ public class PropertyServiceTest {
                 .build();
 
         Double metersExpected = (bathroom.getWidth().doubleValue() * bathroom.getLength().doubleValue()) + (kit.getLength().doubleValue()* kit.getWidth().doubleValue());
-
-        PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictRepository, mockRoomRepository);
 
         assertEquals(metersExpected, propertyService.getMetersOfProperty(house));
     }
@@ -74,7 +73,6 @@ public class PropertyServiceTest {
                 .build();
 
         Double metersExpected = (bathroom.getWidth().doubleValue() * bathroom.getLength().doubleValue()) + (kit.getLength().doubleValue()* 0);
-        PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictRepository, mockRoomRepository);
 
         assertNotEquals(metersExpected, propertyService.getMetersOfProperty(house));
     }
@@ -108,9 +106,38 @@ public class PropertyServiceTest {
         Double valueExpected = ((bathroom.getWidth().doubleValue() * bathroom.getLength().doubleValue())
                 + (kit.getLength().doubleValue()* kit.getWidth().doubleValue())) * district.getFootageValue();
 
-        PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictRepository, mockRoomRepository);
-
         assertEquals(valueExpected,propertyService.getValueOfProperty(house));
+    }
+    @Test
+    public void IndicatePriceOfPropertyBasedOnTheTotalAreaValueDistrictNotEqual(){
+        Room bathroom = Room.builder()
+                .name("Bathroom")
+                .length(new BigDecimal(5.0))
+                .width(new BigDecimal(5.0))
+                .build();
+        Room kit = Room.builder()
+                .name("kit")
+                .length(new BigDecimal(10.0))
+                .width(new BigDecimal(15.0))
+                .build();
+
+        District district = District.builder()
+                .name("Casa Verde")
+                .footageValue(7000.0)
+                .build();
+
+        List<Room> rooms = new ArrayList<>(Arrays.asList(bathroom, kit));
+
+        Property house = Property.builder()
+                .name("House happy")
+                .rooms(rooms)
+                .district(district)
+                .build();
+
+        Double valueExpected = ((bathroom.getWidth().doubleValue() * bathroom.getLength().doubleValue())
+                + (kit.getLength().doubleValue()* kit.getWidth().doubleValue()));
+
+        assertNotEquals(valueExpected,propertyService.getValueOfProperty(house));
     }
 
     //        RoomRepository mockRoomRepository = Mockito.mock(RoomRepository.class);
@@ -143,7 +170,6 @@ public class PropertyServiceTest {
                 .rooms(rooms)
                 .build();
 
-        PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictRepository, mockRoomRepository);
         Room maxRoom = propertyService.getMaxRoom(house);
 
         assertEquals(kit, maxRoom);
@@ -171,8 +197,6 @@ public class PropertyServiceTest {
                 .name("House happy")
                 .rooms(rooms)
                 .build();
-
-        PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictRepository, mockRoomRepository);
         Room maxRoom = propertyService.getMaxRoom(house);
 
         assertNotEquals(bathroom, maxRoom);
