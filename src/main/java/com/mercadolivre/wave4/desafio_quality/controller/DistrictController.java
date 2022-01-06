@@ -2,7 +2,7 @@ package com.mercadolivre.wave4.desafio_quality.controller;
 
 import com.mercadolivre.wave4.desafio_quality.dtos.DistrictDTO;
 import com.mercadolivre.wave4.desafio_quality.entities.District;
-import com.mercadolivre.wave4.desafio_quality.services.DistrictService;
+import com.mercadolivre.wave4.desafio_quality.services.impl.DistrictService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

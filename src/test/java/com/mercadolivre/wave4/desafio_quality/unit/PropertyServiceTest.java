@@ -10,24 +10,31 @@ import com.mercadolivre.wave4.desafio_quality.entities.Property;
 import com.mercadolivre.wave4.desafio_quality.entities.Room;
 import com.mercadolivre.wave4.desafio_quality.repositories.DistrictRepository;
 import com.mercadolivre.wave4.desafio_quality.repositories.PropertyRepository;
-import com.mercadolivre.wave4.desafio_quality.services.PropertyService;
+import com.mercadolivre.wave4.desafio_quality.services.impl.PropertyService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@SpringBootTest
 public class PropertyServiceTest {
-    PropertyRepository mockPropertyRepository = Mockito.mock(PropertyRepository.class);
-    DistrictRepository mockDistrictRepository = Mockito.mock(DistrictRepository.class);
 
-    PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictRepository);
+    @Mock
+    PropertyRepository mockPropertyRepository;
 
+    @Mock
+    DistrictRepository mockDistrictRepository;
+
+    @InjectMocks
+    PropertyService propertyService;
 
     @Test
-    public void shouldCheckTotalNumberOfPropertyMeters() {
+    void shouldCheckTotalNumberOfPropertyMeters() {
         Room bathroom = Room.builder()
                 .name("Bathroom")
                 .length(new BigDecimal(5.0))
@@ -52,7 +59,7 @@ public class PropertyServiceTest {
     }
 
     @Test
-    public void shouldCheckTotalNumberOfPropertyMetersNotEquals() {
+    void shouldCheckTotalNumberOfPropertyMetersNotEquals() {
         Room bathroom = Room.builder()
                 .name("Bathroom")
                 .length(new BigDecimal(5.0))
@@ -77,7 +84,7 @@ public class PropertyServiceTest {
     }
 
     @Test
-    public void IndicatePriceOfPropertyBasedOnTheTotalAreaValueDistrict() {
+    void IndicatePriceOfPropertyBasedOnTheTotalAreaValueDistrict() {
         Room bathroom = Room.builder()
                 .name("Bathroom")
                 .length(new BigDecimal(5.0))
@@ -109,7 +116,7 @@ public class PropertyServiceTest {
     }
 
     @Test
-    public void IndicatePriceOfPropertyBasedOnTheTotalAreaValueDistrictNotEqual() {
+    void IndicatePriceOfPropertyBasedOnTheTotalAreaValueDistrictNotEqual() {
         Room bathroom = Room.builder()
                 .name("Bathroom")
                 .length(new BigDecimal(5.0))
@@ -141,7 +148,7 @@ public class PropertyServiceTest {
     }
 
     @Test
-    public void DeterminateAreaOfEachRoom() {
+    void DeterminateAreaOfEachRoom() {
         Room bathroom = Room.builder()
                 .name("Bathroom")
                 .length(new BigDecimal(5.0))
@@ -173,7 +180,7 @@ public class PropertyServiceTest {
 //            Mockito.when(mockPropertyRepository.save(house)).thenReturn(house);
 
     @Test
-    public void shouldCheckMaxRoom() {
+    void shouldCheckMaxRoom() {
 
         Room bathroom = Room.builder()
                 .name("Bathroom")
@@ -201,7 +208,7 @@ public class PropertyServiceTest {
     }
 
     @Test
-    public void shouldCheckMaxRoomNotEquals() {
+    void shouldCheckMaxRoomNotEquals() {
 
         Room bathroom = Room.builder()
                 .name("Bathroom")
