@@ -1,6 +1,7 @@
 package com.mercadolivre.wave4.desafio_quality.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
@@ -36,5 +37,9 @@ public class Room {
     @DecimalMax(value = "33.0", message = "O comprimento maximo permitido do comodo é de 33m")
     @Column
     private BigDecimal length;
+
+    @JsonBackReference
+    @ManyToOne
+    private Property property;
 
 }

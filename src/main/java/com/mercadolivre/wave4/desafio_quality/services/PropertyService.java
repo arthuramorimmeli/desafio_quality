@@ -28,8 +28,10 @@ public class PropertyService {
     }
 
     public Property create(Property property) {
-        property.setDistrict(districtRepository.saveAndFlush(property.getDistrict()));
-        property.setRooms(roomRepository.saveAll(property.getRooms()));
+//        property.setDistrict(districtRepository.saveAndFlush(property.getDistrict()));
+//        property.setRooms(roomRepository.saveAll(property.getRooms()));
+//        return propertyRepository.save(property);
+        property.addRoom();
         return propertyRepository.save(property);
     }
 
@@ -44,12 +46,4 @@ public class PropertyService {
     public Double calculateMetersOfProperty(Property property) {
         return property.getRooms().stream().mapToDouble(room -> room.getLength().doubleValue() * room.getWidth().doubleValue()).sum();
     }
-
-//    public CustomerDTO customerToDTO(Customer customer) {
-//        return modelMapper.map(customer, CustomerDTO.class);
-//    }
-
-//    public Customer customerToDTO(CustomerDTO customer) {
-//        return modelMapper.map(customer, Customer.class);
-//    }
 }
