@@ -39,9 +39,21 @@ public class PropertyService {
         return propertyRepository.getById(id);
     }
 
-    public Double calculateMetersOfProperty(Property property) {
+    public Double getMetersOfProperty(Property property) {
         return property.getRooms().stream().mapToDouble(room -> room.getLength().doubleValue() * room.getWidth().doubleValue()).sum();
     }
+
+    public Double getValueOfProperty(Property property){
+        return getMetersOfProperty(property) * property.getDistrict().getFootageValue();
+    }
+
+//    public CustomerDTO customerToDTO(Customer customer) {
+//        return modelMapper.map(customer, CustomerDTO.class);
+//    }
+
+//    public Customer customerToDTO(CustomerDTO customer) {
+//        return modelMapper.map(customer, Customer.class);
+//    }
 
     public Room getMaxRoom(Property property) {
         return property.getRooms().stream().max(Comparator.comparingDouble(room ->
