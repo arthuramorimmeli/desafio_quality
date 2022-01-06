@@ -121,4 +121,61 @@ public class PropertyServiceTest {
 //            PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictRepository, mockRoomRepository);
 //
 //            Mockito.when(mockPropertyRepository.save(house)).thenReturn(house);
+
+    @Test
+    public void shouldCheckMaxRoom() {
+
+        Room bathroom = Room.builder()
+                .name("Bathroom")
+                .length(new BigDecimal(5.0))
+                .width(new BigDecimal(5.0))
+                .build();
+        Room kit = Room.builder()
+                .name("kit")
+                .length(new BigDecimal(10.0))
+                .width(new BigDecimal(15.0))
+                .build();
+
+        List<Room> rooms = new ArrayList<>(Arrays.asList(bathroom, kit));
+
+        Property house = Property.builder()
+                .name("House happy")
+                .rooms(rooms)
+                .build();
+
+        PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictRepository, mockRoomRepository);
+        Room maxRoom = propertyService.getMaxRoom(house);
+
+        assertEquals(kit, maxRoom);
+
+
+    }
+
+    @Test
+    public void shouldCheckMaxRoomNotEquals() {
+
+        Room bathroom = Room.builder()
+                .name("Bathroom")
+                .length(new BigDecimal(5.0))
+                .width(new BigDecimal(5.0))
+                .build();
+        Room kit = Room.builder()
+                .name("kit")
+                .length(new BigDecimal(10.0))
+                .width(new BigDecimal(15.0))
+                .build();
+
+        List<Room> rooms = new ArrayList<>(Arrays.asList(bathroom, kit));
+
+        Property house = Property.builder()
+                .name("House happy")
+                .rooms(rooms)
+                .build();
+
+        PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictRepository, mockRoomRepository);
+        Room maxRoom = propertyService.getMaxRoom(house);
+
+        assertNotEquals(bathroom, maxRoom);
+
+    }
 }

@@ -1,17 +1,15 @@
 package com.mercadolivre.wave4.desafio_quality.entities;
 
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import javax.transaction.Transactional;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -32,6 +30,7 @@ public class Property {
     @Column
     private String name;
 
+    @NotNull
     @ManyToOne
     private District district;
 
@@ -58,5 +57,18 @@ public class Property {
         this.rooms.forEach(room -> {
         room.setProperty(this);
         });
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Property property = (Property) o;
+        return id.equals(property.id) && name.equals(property.name) && district.equals(property.district) && Objects.equals(rooms, property.rooms);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, district, rooms);
     }
 }

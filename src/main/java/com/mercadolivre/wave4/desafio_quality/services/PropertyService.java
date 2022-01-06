@@ -1,16 +1,13 @@
 package com.mercadolivre.wave4.desafio_quality.services;
 
-import com.mercadolivre.wave4.desafio_quality.entities.District;
 import com.mercadolivre.wave4.desafio_quality.entities.Property;
 import com.mercadolivre.wave4.desafio_quality.entities.Room;
 import com.mercadolivre.wave4.desafio_quality.repositories.DistrictRepository;
 import com.mercadolivre.wave4.desafio_quality.repositories.PropertyRepository;
 import com.mercadolivre.wave4.desafio_quality.repositories.RoomRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class PropertyService {
@@ -19,7 +16,7 @@ public class PropertyService {
 
     private DistrictRepository districtRepository;
 
-    private RoomRepository roomRepository;
+    private  final RoomRepository roomRepository;
 
     public PropertyService(PropertyRepository propertyRepository, DistrictRepository districtRepository, RoomRepository roomRepository) {
         this.propertyRepository = propertyRepository;
@@ -28,9 +25,8 @@ public class PropertyService {
     }
 
     public Property create(Property property) {
-//        property.setDistrict(districtRepository.saveAndFlush(property.getDistrict()));
-//        property.setRooms(roomRepository.saveAll(property.getRooms()));
-//        return propertyRepository.save(property);
+        if (property.getDistrict().getId() == null) {
+        }
         property.addRoom();
         return propertyRepository.save(property);
     }
@@ -58,4 +54,9 @@ public class PropertyService {
 //    public Customer customerToDTO(CustomerDTO customer) {
 //        return modelMapper.map(customer, Customer.class);
 //    }
+
+    public Room getMaxRoom(Property property) {
+        return property.getRooms().stream().max(Comparator.comparingDouble(room ->
+                room.getLength().doubleValue() * room.getWidth().doubleValue())).orElse(null);
+    }
 }
