@@ -35,7 +35,7 @@ public class Property {
     @ManyToOne
     private District district;
 
-    @OneToMany
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
     private List<Room> rooms = new ArrayList<>();
 
     public District getDistrict() {
@@ -52,5 +52,11 @@ public class Property {
 
     public void setRooms(List<Room> rooms) {
         this.rooms = rooms;
+    }
+
+    public void addRoom() {
+        this.rooms.forEach(room -> {
+        room.setProperty(this);
+        });
     }
 }
