@@ -7,6 +7,7 @@ import com.mercadolivre.wave4.desafio_quality.repositories.DistrictRepository;
 import com.mercadolivre.wave4.desafio_quality.repositories.PropertyRepository;
 import com.mercadolivre.wave4.desafio_quality.services.impl.DistrictService;
 import com.mercadolivre.wave4.desafio_quality.services.impl.PropertyService;
+import com.mercadolivre.wave4.desafio_quality.shared.exceptions.PropertyNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +16,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -49,8 +51,8 @@ public class PropertyServiceTest {
                 .build();
 
         PropertyRepository mockPropertyRepository = Mockito.mock(PropertyRepository.class);
-        DistrictService mockDistrictServie = Mockito.mock(DistrictService.class);
-        PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictServie);
+        DistrictService mockDistrictService = Mockito.mock(DistrictService.class);
+        PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictService);
 
         Mockito.when(mockPropertyRepository.save(house)).thenReturn(house);
 
@@ -94,11 +96,12 @@ public class PropertyServiceTest {
 
         PropertyRepository mockPropertyRepository = Mockito.mock(PropertyRepository.class);
         DistrictRepository mockDistrictRepository = Mockito.mock(DistrictRepository.class);
-        DistrictService mockDistrictServie = Mockito.mock(DistrictService.class);
-        PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictServie);
+
+        DistrictService districtService = new DistrictService(mockDistrictRepository);
+        PropertyService propertyService = new PropertyService(mockPropertyRepository, districtService);
 
         Mockito.when(mockPropertyRepository.save(house)).thenReturn(house);
-        Mockito.when(mockDistrictRepository.saveAndFlush(district)).thenReturn(districtCreated);
+        Mockito.when(mockDistrictRepository.findByName(district.getName())).thenReturn(districtCreated);
 
 
         Property property = propertyService.create(house);
@@ -107,7 +110,7 @@ public class PropertyServiceTest {
     }
 
     @Test
-    void shouldCheckTotalNumberOfPropertyMeters() {
+    void shouldCheckTotalNumberOfPropertyMetersSuccess() {
         Room bathroom = Room.builder()
                 .name("Bathroom")
                 .length(new BigDecimal(5.0))
@@ -129,8 +132,52 @@ public class PropertyServiceTest {
         Double metersExpected = (bathroom.getWidth().doubleValue() * bathroom.getLength().doubleValue()) + (kit.getLength().doubleValue() * kit.getWidth().doubleValue());
 
         PropertyRepository mockPropertyRepository = Mockito.mock(PropertyRepository.class);
-        DistrictService mockDistrictServie = Mockito.mock(DistrictService.class);
-        PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictServie);
+        DistrictService mockDistrictService = Mockito.mock(DistrictService.class);
+        PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictService);
+
+        Double metersOfProperty = propertyService.getMetersOfProperty(house);
+        assertEquals(metersExpected, metersOfProperty);
+    }
+
+    @Test
+    void shouldErrorOfFindByIdInexistError() {
+        PropertyRepository mockPropertyRepository = Mockito.mock(PropertyRepository.class);
+        DistrictService mockDistrictService = Mockito.mock(DistrictService.class);
+
+        Mockito.when(mockPropertyRepository.findById(1L)).thenThrow( new PropertyNotFoundException(""));
+
+        assertThrows(PropertyNotFoundException.class, () -> mockPropertyRepository.findById(1L));
+    }
+
+    @Test
+    void shouldCheckTotalNumberOfPropertyMetersOfControllerSuccess() {
+        Room bathroom = Room.builder()
+                .name("Bathroom")
+                .length(new BigDecimal(5.0))
+                .width(new BigDecimal(5.0))
+                .build();
+        Room kit = Room.builder()
+                .name("kit")
+                .length(new BigDecimal(10.0))
+                .width(new BigDecimal(15.0))
+                .build();
+
+        List<Room> rooms = new ArrayList<>(Arrays.asList(bathroom, kit));
+
+        Property house = Property.builder()
+                .id(1L)
+                .name("House happy")
+                .rooms(rooms)
+                .build();
+
+        Double metersExpected = (bathroom.getWidth().doubleValue() * bathroom.getLength().doubleValue()) + (kit.getLength().doubleValue() * kit.getWidth().doubleValue());
+
+        PropertyRepository mockPropertyRepository = Mockito.mock(PropertyRepository.class);
+        DistrictService mockDistrictService = Mockito.mock(DistrictService.class);
+
+        Mockito.when(mockPropertyRepository.findById(1L)).thenReturn(Optional.of(house));
+
+        PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictService);
 
         Double metersOfProperty = propertyService.getMetersOfProperty(house);
         assertEquals(metersExpected, metersOfProperty);
@@ -159,14 +206,14 @@ public class PropertyServiceTest {
         Double metersExpected = (bathroom.getWidth().doubleValue() * bathroom.getLength().doubleValue()) + (kit.getLength().doubleValue() * 0);
 
         PropertyRepository mockPropertyRepository = Mockito.mock(PropertyRepository.class);
-        DistrictService mockDistrictServie = Mockito.mock(DistrictService.class);
-        PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictServie);
+        DistrictService mockDistrictService = Mockito.mock(DistrictService.class);
+        PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictService);
 
         assertNotEquals(metersExpected, propertyService.getMetersOfProperty(house));
     }
 
     @Test
-    void IndicatePriceOfPropertyBasedOnTheTotalAreaValueDistrict() {
+    void IndicatePriceOfPropertyBasedOnTheTotalAreaValueDistrictSuccess() {
         Room bathroom = Room.builder()
                 .name("Bathroom")
                 .length(new BigDecimal(5.0))
@@ -195,8 +242,8 @@ public class PropertyServiceTest {
                 + (kit.getLength().doubleValue() * kit.getWidth().doubleValue())) * district.getFootageValue();
 
         PropertyRepository mockPropertyRepository = Mockito.mock(PropertyRepository.class);
-        DistrictService mockDistrictServie = Mockito.mock(DistrictService.class);
-        PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictServie);
+        DistrictService mockDistrictService = Mockito.mock(DistrictService.class);
+        PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictService);
 
         assertEquals(valueExpected, propertyService.getValueOfProperty(house));
     }
@@ -231,8 +278,8 @@ public class PropertyServiceTest {
                 + (kit.getLength().doubleValue() * kit.getWidth().doubleValue()));
 
         PropertyRepository mockPropertyRepository = Mockito.mock(PropertyRepository.class);
-        DistrictService mockDistrictServie = Mockito.mock(DistrictService.class);
-        PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictServie);
+        DistrictService mockDistrictService = Mockito.mock(DistrictService.class);
+        PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictService);
 
         assertNotEquals(valueExpected, propertyService.getValueOfProperty(house));
     }
@@ -255,8 +302,8 @@ public class PropertyServiceTest {
         Double areaKitchen = kit.getLength().doubleValue() * kit.getWidth().doubleValue();
 
         PropertyRepository mockPropertyRepository = Mockito.mock(PropertyRepository.class);
-        DistrictService mockDistrictServie = Mockito.mock(DistrictService.class);
-        PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictServie);
+        DistrictService mockDistrictService = Mockito.mock(DistrictService.class);
+        PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictService);
 
         assertEquals(areaBathroom, propertyService.getValueAreaRoom(bathroom));
         assertEquals(areaKitchen, propertyService.getValueAreaRoom(kit));
@@ -264,7 +311,7 @@ public class PropertyServiceTest {
     }
 
     @Test
-    void shouldCheckMaxRoom() {
+    void shouldCheckMaxRoomSuccess() {
 
         Room bathroom = Room.builder()
                 .name("Bathroom")
@@ -285,8 +332,43 @@ public class PropertyServiceTest {
                 .build();
 
         PropertyRepository mockPropertyRepository = Mockito.mock(PropertyRepository.class);
-        DistrictService mockDistrictServie = Mockito.mock(DistrictService.class);
-        PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictServie);
+        DistrictService mockDistrictService = Mockito.mock(DistrictService.class);
+        PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictService);
+
+        Room maxRoom = propertyService.getMaxRoom(house);
+
+        assertEquals(kit, maxRoom);
+
+    }
+
+    @Test
+    void shouldCheckMaxRoomOfControllerSuccess() {
+
+        Room bathroom = Room.builder()
+                .name("Bathroom")
+                .length(new BigDecimal(5.0))
+                .width(new BigDecimal(5.0))
+                .build();
+        Room kit = Room.builder()
+                .name("kit")
+                .length(new BigDecimal(10.0))
+                .width(new BigDecimal(15.0))
+                .build();
+
+        List<Room> rooms = new ArrayList<>(Arrays.asList(bathroom, kit));
+
+        Property house = Property.builder()
+                .id(1L)
+                .name("House happy")
+                .rooms(rooms)
+                .build();
+
+        PropertyRepository mockPropertyRepository = Mockito.mock(PropertyRepository.class);
+        DistrictService mockDistrictService = Mockito.mock(DistrictService.class);
+
+        Mockito.when(mockPropertyRepository.findById(1L)).thenReturn(Optional.of(house));
+
+        PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictService);
 
         Room maxRoom = propertyService.getMaxRoom(house);
 
@@ -316,8 +398,8 @@ public class PropertyServiceTest {
                 .build();
 
         PropertyRepository mockPropertyRepository = Mockito.mock(PropertyRepository.class);
-        DistrictService mockDistrictServie = Mockito.mock(DistrictService.class);
-        PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictServie);
+        DistrictService mockDistrictService = Mockito.mock(DistrictService.class);
+        PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictService);
 
         Room maxRoom = propertyService.getMaxRoom(house);
 
@@ -352,8 +434,8 @@ public class PropertyServiceTest {
                 .build();
 
         PropertyRepository mockPropertyRepository = Mockito.mock(PropertyRepository.class);
-        DistrictService mockDistrictServie = Mockito.mock(DistrictService.class);
-        PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictServie);
+        DistrictService mockDistrictService = Mockito.mock(DistrictService.class);
+        PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictService);
 
         Double valueOfProperty = propertyService.getValueOfProperty(house);
 
@@ -364,7 +446,7 @@ public class PropertyServiceTest {
     }
 
     @Test
-    void shouldCheckValueOfPropertyId() {
+    void shouldCheckValueOfPropertyIdSuccess() {
         Room bathroom = Room.builder()
                 .name("Bathroom")
                 .length(new BigDecimal(5.0))
