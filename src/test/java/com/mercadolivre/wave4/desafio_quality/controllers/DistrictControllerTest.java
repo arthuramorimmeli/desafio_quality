@@ -1,4 +1,4 @@
-package com.mercadolivre.wave4.desafio_quality.integration;
+package com.mercadolivre.wave4.desafio_quality.controllers;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
