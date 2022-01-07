@@ -10,6 +10,7 @@ import com.mercadolivre.wave4.desafio_quality.entities.Property;
 import com.mercadolivre.wave4.desafio_quality.entities.Room;
 import com.mercadolivre.wave4.desafio_quality.repositories.DistrictRepository;
 import com.mercadolivre.wave4.desafio_quality.repositories.PropertyRepository;
+import com.mercadolivre.wave4.desafio_quality.services.DistrictService;
 import com.mercadolivre.wave4.desafio_quality.services.PropertyService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -21,9 +22,9 @@ import java.util.List;
 
 public class PropertyServiceTest {
     PropertyRepository mockPropertyRepository = Mockito.mock(PropertyRepository.class);
-    DistrictRepository mockDistrictRepository = Mockito.mock(DistrictRepository.class);
+    DistrictService mockDistrictService = Mockito.mock(DistrictService.class);
 
-    PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictRepository);
+    PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictService);
 
 
     @Test

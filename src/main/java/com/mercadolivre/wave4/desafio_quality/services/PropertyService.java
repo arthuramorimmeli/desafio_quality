@@ -1,10 +1,12 @@
 package com.mercadolivre.wave4.desafio_quality.services;
 
+import com.mercadolivre.wave4.desafio_quality.entities.District;
 import com.mercadolivre.wave4.desafio_quality.entities.Property;
 import com.mercadolivre.wave4.desafio_quality.entities.Room;
 import com.mercadolivre.wave4.desafio_quality.repositories.DistrictRepository;
 import com.mercadolivre.wave4.desafio_quality.repositories.PropertyRepository;
 import com.mercadolivre.wave4.desafio_quality.shared.exceptions.PropertyNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -14,16 +16,22 @@ public class PropertyService {
 
     private PropertyRepository propertyRepository;
 
-    private DistrictRepository districtRepository;
+    @Autowired
+    private DistrictService districtService;
 
-    public PropertyService(PropertyRepository propertyRepository, DistrictRepository districtRepository) {
+    public PropertyService(PropertyRepository propertyRepository, DistrictService districtService) {
         this.propertyRepository = propertyRepository;
-        this.districtRepository = districtRepository;
+        this.districtService = districtService;
     }
 
     public Property create(Property property) {
-        if (property.getDistrict().getId() == null) {
-            property.setDistrict(districtRepository.saveAndFlush(property.getDistrict()));
+        if (property.getDistrict().getId() == null && property.getDistrict().getName() != null || property.getDistrict().getName().isEmpty()) {
+            District districtOnDatabase = districtService.findByName(property.getDistrict().getName());
+            if (districtOnDatabase != null) {
+                property.setDistrict(districtOnDatabase);
+            } else {
+                property.setDistrict(districtService.createDistrict(property.getDistrict()));
+            }
         }
         property.addRoom();
         return propertyRepository.save(property);
@@ -42,13 +50,14 @@ public class PropertyService {
         return getValueOfProperty(property);
     }
 
-    public Double getValueOfProperty(Property property){
+    public Double getValueOfProperty(Property property) {
         return getMetersOfProperty(property) * property.getDistrict().getFootageValue();
     }
 
-    public Double getValueAreaRoom(Room room){
+    public Double getValueAreaRoom(Room room) {
         return room.getLength().doubleValue() * room.getWidth().doubleValue();
     }
+
     public Double getMetersOfProperty(Long id) {
         Property property = this.findById(id);
         return getMetersOfProperty(property);
