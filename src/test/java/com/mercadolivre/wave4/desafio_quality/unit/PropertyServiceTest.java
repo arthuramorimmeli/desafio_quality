@@ -8,16 +8,20 @@ import com.mercadolivre.wave4.desafio_quality.entities.Property;
 import com.mercadolivre.wave4.desafio_quality.entities.Room;
 import com.mercadolivre.wave4.desafio_quality.repositories.DistrictRepository;
 import com.mercadolivre.wave4.desafio_quality.repositories.PropertyRepository;
+import com.mercadolivre.wave4.desafio_quality.services.impl.DistrictService;
 import com.mercadolivre.wave4.desafio_quality.services.impl.PropertyService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@SpringBootTest
 public class PropertyServiceTest {
 
     @Mock
@@ -218,5 +222,82 @@ public class PropertyServiceTest {
 
         assertNotEquals(bathroom, maxRoom);
 
+    }
+
+    @Test
+    void shouldCheckValueOfProperty() {
+        Room bathroom = Room.builder()
+                .name("Bathroom")
+                .length(new BigDecimal(5.0))
+                .width(new BigDecimal(5.0))
+                .build();
+        Room kit = Room.builder()
+                .name("kit")
+                .length(new BigDecimal(10.0))
+                .width(new BigDecimal(15.0))
+                .build();
+
+        District district = District.builder()
+                .name("Casa Verde")
+                .footageValue(12.0)
+                .build();
+
+        List<Room> rooms = new ArrayList<>(Arrays.asList(bathroom, kit));
+
+        Property house = Property.builder()
+                .name("House happy")
+                .rooms(rooms)
+                .district(district)
+                .build();
+
+        Double valueOfProperty = propertyService.getValueOfProperty(house);
+
+        Double propertyArea = house.getRooms().stream().mapToDouble(room -> room.getWidth().doubleValue() * room.getLength().doubleValue()).sum();
+        Double propertyValue = propertyArea * house.getDistrict().getFootageValue();
+
+        assertEquals(propertyValue, valueOfProperty);
+    }
+
+    @Test
+    void shouldCheckValueOfPropertyId() {
+        Room bathroom = Room.builder()
+                .name("Bathroom")
+                .length(new BigDecimal(5.0))
+                .width(new BigDecimal(5.0))
+                .build();
+        Room kit = Room.builder()
+                .name("kit")
+                .length(new BigDecimal(10.0))
+                .width(new BigDecimal(15.0))
+                .build();
+
+        District district = District.builder()
+                .name("Casa Verde")
+                .footageValue(12.0)
+                .build();
+
+        List<Room> rooms = new ArrayList<>(Arrays.asList(bathroom, kit));
+
+        Property house = Property.builder()
+                .id(1L)
+                .name("House happy")
+                .rooms(rooms)
+                .district(district)
+                .build();
+
+        PropertyRepository mockPropertyRepository = Mockito.mock(PropertyRepository.class);
+        DistrictService mockDistrictService = Mockito.mock(DistrictService.class);
+
+        Mockito.when(mockPropertyRepository.findById(house.getId())).thenReturn(java.util.Optional.of(house));
+
+        PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictService);
+        Double valueOfProperty = propertyService.getValueOfProperty(1L);
+
+        Double propertyArea = house.getRooms().stream().mapToDouble(room -> room.getWidth().doubleValue() * room.getLength().doubleValue()).sum();
+        Double propertyValue = propertyArea * house.getDistrict().getFootageValue();
+
+
+
+        assertEquals(propertyValue, valueOfProperty);
     }
 }
