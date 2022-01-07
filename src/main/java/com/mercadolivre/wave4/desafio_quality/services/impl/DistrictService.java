@@ -23,4 +23,8 @@ public class DistrictService implements IDistrictService {
     public List<District> getAllDistricts() {
         return districtRepository.findAll();
     }
+
+    public District findByName(String name) {
+        return districtRepository.findByName(name);
+    }
 }
