@@ -1,4 +1,4 @@
-package com.mercadolivre.wave4.desafio_quality.integration;
+package com.mercadolivre.wave4.desafio_quality.controllers;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,38 +111,6 @@ public class PropertyControllerTest {
         MvcResult res = mockMvc
                 .perform(MockMvcRequestBuilders
                         .get("/property"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn();
-    }
-
-    @Test
-    void shouldGetPropertiyByIdSuccess() throws Exception {
-        String payload = "{\n" +
-                "\n" +
-                "    \"name\": \"Casa 2\",\n" +
-                "    \"district\": {\n" +
-                "        \"name\": \"bairro \",\n" +
-                "        \"footageValue\": 10\n" +
-                "    },\n" +
-                "\n" +
-                "    \"rooms\": [\n" +
-                "        {\n" +
-                "            \"name\": \"Room 1\",\n" +
-                "            \"width\": 15.0,\n" +
-                "            \"length\": 23.5\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"name\": \"Room 2\",\n" +
-                "            \"width\": 25.0,\n" +
-                "            \"length\": 23.5\n" +
-                "        }\n" +
-                "    ]\n" +
-                "\n" +
-                "}";
-
-        mockMvc
-                .perform(MockMvcRequestBuilders
-                        .get("/property/1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
     }

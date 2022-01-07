@@ -1,4 +1,4 @@
-package com.mercadolivre.wave4.desafio_quality.unit;
+package com.mercadolivre.wave4.desafio_quality.services.impl;
 
 import com.mercadolivre.wave4.desafio_quality.entities.District;
 import com.mercadolivre.wave4.desafio_quality.entities.Property;
@@ -150,6 +150,27 @@ public class PropertyServiceTest {
     }
 
     @Test
+    void shouldFindAllPropertiesSuccess() {
+        Property houseOne = Property.builder()
+                .id(1L)
+                .name("House happy")
+                .build();
+        Property houseTwo = Property.builder()
+                .id(2L)
+                .name("House happy 2")
+                .build();
+
+        List<Property> properties = new ArrayList<>(Arrays.asList(houseOne, houseTwo));
+        PropertyRepository mockPropertyRepository = Mockito.mock(PropertyRepository.class);
+        DistrictService mockDistrictService = Mockito.mock(DistrictService.class);
+        Mockito.when(mockPropertyRepository.findAll()).thenReturn(properties);
+
+        PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictService);
+
+        assertEquals(properties, propertyService.getAll());
+    }
+
+    @Test
     void shouldCheckTotalNumberOfPropertyMetersOfControllerSuccess() {
         Room bathroom = Room.builder()
                 .name("Bathroom")
@@ -179,7 +200,7 @@ public class PropertyServiceTest {
 
         PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictService);
 
-        Double metersOfProperty = propertyService.getMetersOfProperty(house);
+        Double metersOfProperty = propertyService.getMetersOfProperty(1L);
         assertEquals(metersExpected, metersOfProperty);
     }
 
@@ -370,7 +391,7 @@ public class PropertyServiceTest {
 
         PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictService);
 
-        Room maxRoom = propertyService.getMaxRoom(house);
+        Room maxRoom = propertyService.getMaxRoom(1L);
 
         assertEquals(kit, maxRoom);
 
