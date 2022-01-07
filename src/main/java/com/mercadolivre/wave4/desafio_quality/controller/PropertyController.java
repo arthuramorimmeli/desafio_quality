@@ -4,8 +4,9 @@ import com.mercadolivre.wave4.desafio_quality.dtos.PropertyAreaDTO;
 import com.mercadolivre.wave4.desafio_quality.dtos.PropertyDTO;
 import com.mercadolivre.wave4.desafio_quality.dtos.PropertyValueDTO;
 import com.mercadolivre.wave4.desafio_quality.dtos.RoomDTO;
-import com.mercadolivre.wave4.desafio_quality.services.PropertyService;
+import com.mercadolivre.wave4.desafio_quality.services.impl.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +23,7 @@ public class PropertyController {
 
     @PostMapping
     public ResponseEntity<PropertyDTO> createProperty(@Valid @RequestBody PropertyDTO propertyDTO) {
-        return ResponseEntity.ok(PropertyDTO.convert(propertyService.create(PropertyDTO.convert(propertyDTO))));
+        return ResponseEntity.status(HttpStatus.CREATED).body(PropertyDTO.convert(propertyService.create(PropertyDTO.convert(propertyDTO))));
     }
 
     @GetMapping

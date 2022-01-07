@@ -1,13 +1,14 @@
-package com.mercadolivre.wave4.desafio_quality.services;
+package com.mercadolivre.wave4.desafio_quality.services.impl;
 
 import com.mercadolivre.wave4.desafio_quality.entities.District;
 import com.mercadolivre.wave4.desafio_quality.repositories.DistrictRepository;
+import com.mercadolivre.wave4.desafio_quality.services.IDistrictService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class DistrictService {
+public class DistrictService implements IDistrictService {
 
     DistrictRepository districtRepository;
 

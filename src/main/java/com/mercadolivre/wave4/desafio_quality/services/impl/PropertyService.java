@@ -1,10 +1,11 @@
-package com.mercadolivre.wave4.desafio_quality.services;
+package com.mercadolivre.wave4.desafio_quality.services.impl;
 
 import com.mercadolivre.wave4.desafio_quality.entities.District;
 import com.mercadolivre.wave4.desafio_quality.entities.Property;
 import com.mercadolivre.wave4.desafio_quality.entities.Room;
 import com.mercadolivre.wave4.desafio_quality.repositories.DistrictRepository;
 import com.mercadolivre.wave4.desafio_quality.repositories.PropertyRepository;
+import com.mercadolivre.wave4.desafio_quality.services.IPropertyService;
 import com.mercadolivre.wave4.desafio_quality.shared.exceptions.PropertyNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
-public class PropertyService {
+public class PropertyService implements IPropertyService {
 
     private PropertyRepository propertyRepository;
 
