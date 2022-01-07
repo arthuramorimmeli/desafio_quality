@@ -12,21 +12,19 @@ import com.mercadolivre.wave4.desafio_quality.services.impl.PropertyService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@SpringBootTest
 public class PropertyServiceTest {
 
     @Mock
-    PropertyRepository mockPropertyRepository;
+    private PropertyRepository mockPropertyRepository;
 
     @Mock
-    DistrictRepository mockDistrictRepository;
+    private DistrictRepository mockDistrictRepository;
 
     @InjectMocks
     PropertyService propertyService;
@@ -53,7 +51,8 @@ public class PropertyServiceTest {
 
         Double metersExpected = (bathroom.getWidth().doubleValue() * bathroom.getLength().doubleValue()) + (kit.getLength().doubleValue() * kit.getWidth().doubleValue());
 
-        assertEquals(metersExpected, propertyService.getMetersOfProperty(house));
+        Double metersOfProperty = propertyService.getMetersOfProperty(house);
+        assertEquals(metersExpected, metersOfProperty);
     }
 
     @Test
@@ -166,16 +165,6 @@ public class PropertyServiceTest {
         assertEquals(areaKitchen, propertyService.getValueAreaRoom(kit));
 
     }
-
-
-    //        RoomRepository mockRoomRepository = Mockito.mock(RoomRepository.class);
-    //        PropertyRepository mockPropertyRepository = Mockito.mock(PropertyRepository.class);
-    //        DistrictRepository mockDistrictRepository = Mockito.mock(DistrictRepository.class);
-    //
-    //
-//            PropertyService propertyService = new PropertyService(mockPropertyRepository, mockDistrictRepository, mockRoomRepository);
-//
-//            Mockito.when(mockPropertyRepository.save(house)).thenReturn(house);
 
     @Test
     void shouldCheckMaxRoom() {
